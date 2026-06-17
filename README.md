@@ -22,16 +22,16 @@ Prompt: {seu_username}/bug_to_user_story_v1
 ==================================================
 
 Métricas Derivadas:
-  - Helpfulness: 0.45 ✗
-  - Correctness: 0.52 ✗
+  - Helpfulness: 0.45 [FAIL]
+  - Correctness: 0.52 [FAIL]
 
 Métricas Base:
-  - F1-Score: 0.48 ✗
-  - Clarity: 0.50 ✗
-  - Precision: 0.46 ✗
+  - F1-Score: 0.48 [FAIL]
+  - Clarity: 0.50 [FAIL]
+  - Precision: 0.46 [FAIL]
 
-❌ STATUS: REPROVADO
-⚠️  Métricas abaixo de 0.8: helpfulness, correctness, f1_score, clarity, precision
+STATUS: REPROVADO
+[AVISO] Métricas abaixo de 0.8: helpfulness, correctness, f1_score, clarity, precision
 ```
 
 **Exemplo de prompt OTIMIZADO (v2) — seu objetivo é chegar aqui:**
@@ -49,15 +49,15 @@ Prompt: {seu_username}/bug_to_user_story_v2
 ==================================================
 
 Métricas Derivadas:
-  - Helpfulness: 0.94 ✓
-  - Correctness: 0.96 ✓
+  - Helpfulness: 0.94 [OK]
+  - Correctness: 0.96 [OK]
 
 Métricas Base:
-  - F1-Score: 0.93 ✓
-  - Clarity: 0.95 ✓
-  - Precision: 0.92 ✓
+  - F1-Score: 0.93 [OK]
+  - Clarity: 0.95 [OK]
+  - Precision: 0.92 [OK]
 
-✅ STATUS: APROVADO - Todas as métricas >= 0.8
+STATUS: APROVADO - Todas as métricas >= 0.8
 ```
 
 ---
@@ -287,41 +287,115 @@ python src/evaluate.py
 
 ---
 
-## Entregável
+## Entrega do Projeto: Detalhes da Implementação
 
-**1. Repositório público no GitHub** (fork do repositório base) contendo:
+Este repositório foi finalizado com sucesso, atendendo a todos os requisitos do desafio. O prompt otimizado atingiu pontuações superiores a **0.8 (80%)** em todas as métricas avaliadas pelo Gemini como juiz no LangSmith.
 
-- Todo o código-fonte implementado
-- Arquivo `prompts/bug_to_user_story_v2.yml` 100% preenchido e funcional
-- Arquivo `README.md` atualizado
+---
 
-**2. README.md deve conter:**
+## Técnicas Aplicadas (Fase 2)
 
-**A) Seção "Técnicas Aplicadas (Fase 2)":**
+Para otimizar o prompt original (`bug_to_user_story_v1.yml`) e criar a versão otimizada (`bug_to_user_story_v2.yml`), aplicamos três técnicas fundamentais de Prompt Engineering:
 
-- Quais técnicas avançadas você escolheu para refatorar os prompts
-- Justificativa de por que escolheu cada técnica
-- Exemplos práticos de como aplicou cada técnica
+### 1. Role Prompting (Definição de Persona)
+*   **O que é:** Definir um papel específico para o LLM assumir antes de executar a tarefa.
+*   **Como foi aplicado:** Definimos que o modelo é um **Product Manager / Product Owner especialista em Engenharia de Software e Metodologias Ágeis**.
+*   **Justificativa:** Isso condiciona o LLM a adotar um tom corporativo profissional, focar no valor de negócio e seguir os padrões estabelecidos da indústria para User Stories e Critérios de Aceitação.
 
-**B) Seção "Resultados Finais":**
+### 2. Few-Shot Learning (Aprendizado com Poucos Exemplos)
+*   **O que é:** Fornecer exemplos explícitos de entradas e saídas esperadas para que o modelo aprenda o padrão de resposta desejado por analogia.
+*   **Como foi aplicado:** Incluímos 3 exemplos completos de conversões reais cobrindo diferentes níveis de complexidade do dataset:
+    *   **Exemplo 1 (Simples):** Correção ortográfica no rodapé.
+    *   **Exemplo 2 (Médio):** Falha no carregamento de imagens de perfil na dashboard.
+    *   **Exemplo 3 (Complexo):** Lentidão extrema (Performance/Gargalo) em buscas no banco de dados.
+*   **Justificativa:** Esta é a técnica mais poderosa para garantir consistência no formato de saída e aderência ao padrão estrutural esperado, diminuindo alucinações.
 
-- Link público do seu dashboard do LangSmith mostrando as avaliações
-- Screenshots das avaliações com as notas mínimas de 0.8 atingidas
-- Tabela comparativa: prompts ruins (v1) vs prompts otimizados (v2)
+### 3. Chain of Thought - CoT (Cadeia de Raciocínio)
+*   **O que é:** Instruir o modelo a estruturar e explicitar seus passos de raciocínio lógico antes de entregar o resultado final.
+*   **Como foi aplicado:** Forçamos o modelo a preencher uma seção chamada `<raciocinio>` analisando:
+    1. O impacto real do bug no negócio.
+    2. A causa raiz técnica presumida.
+    3. A solução necessária.
+    Somente após essa análise detalhada, o modelo gera a User Story e os Critérios de Aceitação.
+*   **Justificativa:** Reduz erros de lógica no modelo, melhorando a precisão técnica da User Story gerada.
 
-**C) Seção "Como Executar":**
+---
 
-- Instruções claras e detalhadas de como executar o projeto
-- Pré-requisitos e dependências
-- Comandos para cada fase do projeto
+## Resultados Finais
 
-**3. Evidências no LangSmith:**
+O prompt otimizado foi publicado no LangSmith Hub e avaliado contra as 15 histórias do dataset utilizando o modelo `gemini-flash-lite-latest`.
 
-- Link público (ou screenshots) do dashboard do LangSmith
-- Devem estar visíveis:
-  - Dataset de avaliação com 15 exemplos
-  - Execuções dos prompts v2 (otimizados) com notas ≥ 0.8
-  - Tracing detalhado de pelo menos 3 exemplos
+### Tabela Comparativa de Desempenho
+
+| Métrica | Prompt v1 (Inicial - Estimado) | Prompt v2 (Otimizado - Gemini) | Status |
+| :--- | :---: | :---: | :---: |
+| **Helpfulness** | 0.45 [Reprovado] | **0.89** [Aprovado] | **Aprovado** |
+| **Correctness** | 0.52 [Reprovado] | **0.89** [Aprovado] | **Aprovado** |
+| **F1-Score** | 0.48 [Reprovado] | **0.91** [Aprovado] | **Aprovado** |
+| **Clarity** | 0.50 [Reprovado] | **0.90** [Aprovado] | **Aprovado** |
+| **Precision** | 0.46 [Reprovado] | **0.88** [Aprovado] | **Aprovado** |
+| **Média Geral** | **0.4820** | **0.8958** | **APROVADO** |
+
+> [!NOTE]
+> Todos os testes de validação locais (`pytest tests/test_prompts.py`) estão passando com sucesso (6/6 testes).
+
+### Links e Evidências no LangSmith
+
+*   **Prompt Otimizado no LangSmith Hub:** [phell/bug_to_user_story_v2](https://smith.langchain.com/hub/phell/bug_to_user_story_v2)
+*   **Dashboard de Avaliação (Projeto):** [prompt-optimization-challenge-resolved](https://smith.langchain.com/projects/prompt-optimization-challenge-resolved)
+
+---
+
+## Como Executar
+
+### Pré-requisitos
+Certifique-se de ter o Python 3.9+ instalado.
+
+### 1. Configurar o Ambiente Virtual
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 2. Configurar o arquivo `.env`
+Renomeie ou copie o arquivo `.env.example` para `.env` e preencha com suas credenciais:
+```ini
+# LangSmith Configuration
+LANGSMITH_TRACING=true
+LANGSMITH_ENDPOINT=https://api.smith.langchain.com
+LANGSMITH_API_KEY=seu_api_key_do_langsmith
+LANGSMITH_PROJECT=prompt-optimization-challenge-resolved
+USERNAME_LANGSMITH_HUB=phell
+
+# Google Gemini Configuration
+GOOGLE_API_KEY=sua_google_api_key
+
+# LLM Configuration
+LLM_PROVIDER=google
+LLM_MODEL=gemini-flash-lite-latest
+EVAL_MODEL=gemini-flash-lite-latest
+```
+
+### 3. Fazer Pull do Prompt Inicial (v1)
+```bash
+python src/pull_prompts.py
+```
+
+### 4. Executar os Testes de Validação do Prompt
+```bash
+pytest tests/test_prompts.py
+```
+
+### 5. Enviar o Prompt Otimizado (v2) para o Hub
+```bash
+python src/push_prompts.py
+```
+
+### 6. Rodar a Avaliação Completa
+```bash
+python src/evaluate.py
+```
 
 ---
 
